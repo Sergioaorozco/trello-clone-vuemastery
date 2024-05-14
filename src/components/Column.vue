@@ -14,15 +14,12 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
 import {useBoardStore} from '../stores/BoardStore'
 import {ref} from 'vue'
-import taskCard from '../components/TaskCard.vue'
 //Icons
 import plusIcon from '../icons/PlusIcon.vue'
-import editIcon from '../icons/EditIcon.vue'
-import RemoveIcon from '../icons/RemoveIcon.vue'
 
 const boardStore = useBoardStore();
 

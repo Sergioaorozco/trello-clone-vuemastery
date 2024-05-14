@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useBoardStore } from '../src/stores/BoardStore.ts'
 import TaskCard from './components/TaskCard.vue';
 import Column from './components/Column.vue';

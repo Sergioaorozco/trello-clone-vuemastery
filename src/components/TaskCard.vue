@@ -8,7 +8,7 @@
       </li>
 </template>
 
-<script setup>
+<script setup lang="ts">
 
 import {useBoardStore} from '../stores/BoardStore'
 import {ref} from 'vue'
