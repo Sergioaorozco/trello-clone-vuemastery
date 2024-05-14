@@ -7,12 +7,12 @@
         {{ item.name }}
         <div class="flex gap-x-2 items-center">
           <i @click="removeTask" class="hidden group-hover:block cursor-pointer text-slate-600 hover:text-slate-700 size-5 transition-colors duration-200"><editIcon /></i>
-          <i @click="removeTask" class="hidden group-hover:block cursor-pointer text-slate-600 hover:text-red-600 size-5 transition-colors duration-200"><removeIcon /></i>
+          <i @click="removeTask(taskIndex, item.name)" class="hidden group-hover:block cursor-pointer text-slate-600 hover:text-red-600 size-5 transition-colors duration-200"><removeIcon /></i>
         </div>
       </li>
       <li>
         <div v-if="!addNewTask" @click.self="addNewTask = true" class="bg-slate-200/75 text-slate-400 flex items-center gap-x-2 py-3 px-4 rounded-md transition-colors cursor-pointer w-full hover:bg-slate-300/75"> 
-          <plusIcon class="inline"/> Create New Task
+          <i class="inline size-5"><plusIcon /></i>Create New Task
         </div>
         <input v-else @keyup.enter="addTask()" type="text" autofocus="true" @blur.self="addNewTask = false" v-model="newTaskName" :class="newTaskValidation.class" class="taskVal rounded-md border py-3 px-3 w-full" :placeholder="newTaskValidation.text">
       </li>
@@ -69,6 +69,14 @@ function addTask(event) {
     newTaskName.value ='';
   }
 }
+
+function removeTask (name) {
+  boardStore.removeTask({
+    columnIndex: props.columnIndex,
+    taskName: name
+  })
+}
+
 
 </script>
 
