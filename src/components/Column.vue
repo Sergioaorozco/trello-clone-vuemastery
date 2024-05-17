@@ -3,7 +3,7 @@
     <h1 class="font-bold">{{ columnInfo.name }}</h1>
     <hr class="my-4">
     <ul class="flex flex-col gap-y-2">
-      <taskCard v-for="(card, taskIndex) in columnInfo.tasks" :taskId="card.id" :taskInfo="card" :key="card.id"></taskCard>
+      <taskCard v-for="(card) in columnInfo.tasks" :taskId="card.id" :taskInfo="card" :key="card.id"></taskCard>
       <li>
         <div v-if="!addNewTask" @click.self="addNewTask = true" class="bg-slate-200/75 text-slate-400 flex items-center gap-x-2 py-3 px-4 rounded-md transition-colors cursor-pointer w-full hover:bg-slate-300/75"> 
           <i class="inline size-5"><plusIcon /></i>Create New Task
@@ -15,8 +15,8 @@
 </template>
 
 <script setup lang="ts">
-
 import {useBoardStore} from '../stores/BoardStore'
+import TaskCard from './TaskCard.vue';
 import {ref} from 'vue'
 //Icons
 import plusIcon from '../icons/PlusIcon.vue'
@@ -34,9 +34,11 @@ let newTaskValidation = ref({
 //Props
 const props = defineProps({
   columnInfo: {
+    type: Object,
     required: true
   },
   columnIndex: {
+    type: Number,
     required: true
   }
 })

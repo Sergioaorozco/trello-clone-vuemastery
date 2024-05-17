@@ -8,25 +8,23 @@
       </li>
 </template>
 
-<script setup lang="ts">
-
+<script setup >
 import {useBoardStore} from '../stores/BoardStore'
-import {ref} from 'vue'
 //Icons
 import editIcon from '../icons/EditIcon.vue'
 import RemoveIcon from '../icons/RemoveIcon.vue'
 
 const boardStore = useBoardStore();
 
-//Refs
-
 //Props
 const props = defineProps({
   taskInfo: {
     required: true,
+    type: String
   },
   taskId: {
     required: true,
+    type: String
   }
 })
 
