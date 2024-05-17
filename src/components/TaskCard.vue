@@ -20,11 +20,16 @@ const boardStore = useBoardStore();
 const props = defineProps({
   taskInfo: {
     required: true,
-    type: String
+    type: Object
   },
   taskId: {
     required: true,
     type: String
+  },
+  columnIdx: {
+    required : true,
+    type: Number
+
   }
 })
 
@@ -33,6 +38,7 @@ const props = defineProps({
 function deleteTask () {
   boardStore.deleteTask({
     taskId: props.taskId,
+    columnIndex: props.columnIdx
   })
 }
 

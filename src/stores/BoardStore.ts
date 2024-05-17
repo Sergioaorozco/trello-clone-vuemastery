@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref as vueRef, Ref } from "vue";
 import { initializeApp } from "firebase/app";
-import { getDatabase, onValue, ref } from "firebase/database";
+import { getDatabase, onValue, ref, update } from "firebase/database";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDfOWhsyYBTYqj0dkqlkQnUYc_ImfnMwmY",
@@ -16,23 +16,6 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-interface Board {
-    columns: Column[];
-}
-
-interface Column {
-    id: string,
-    name: string,
-    tasks: Task[];
-}
-
-interface Task {
-    name: string,
-    id: string,
-    description?: string
-}
-
-
 const boardData: Ref<Board|null> = vueRef(null);
 
 const db = getDatabase();
@@ -44,24 +27,44 @@ onValue(boardRef, (snapshot => {
 
 export const useBoardStore = defineStore('boardStore', () => {
 
-    let board = (boardData)
+    let board = boardData || null
 
-    function addTask({taskName, columnIndex} : {taskName: string, columnIndex: number}){
+    function updateBoard(updatedInfo:Object) {
+        return update(ref(db), updatedInfo)
+    }
+
+    async function addTask({taskName, columnIndex} : {taskName: string, columnIndex: number}){
+        if(!board.value?.columns[columnIndex].tasks) {
+            board.value.columns[columnIndex].tasks = [];
+        }
         const UUID = Math.random().toString(16).slice(2);
         board.value?.columns[columnIndex].tasks.push({
             name: taskName,
             id: UUID,
             description: ''
         })
+        const updatedData:any = {}
+        updatedData[`columns/${columnIndex}/tasks`] = board.value?.columns[columnIndex].tasks;
+
+        return await updateBoard(updatedData)
+        .then(() => console.log('Succesfully Added'))
+        .catch((e) => console.error(`The error is: ${e}`))
     }
 
-    function deleteTask({taskId} : {taskId: string}){
+    function deleteTask({taskId, columnIndex} : {taskId: String, columnIndex: string}){
         if( board.value) {
-            for (const column of board.value.columns) {
+            for (const column of board?.value.columns) {
                 const taskIndex = column.tasks.findIndex(task => task.id === taskId)
                 if (taskIndex !== -1) {
-                    column.tasks.splice(taskIndex, 1)
-                    return
+                    console.log(column);
+                    column.tasks.splice(taskIndex, 1);
+
+                    const updatedData:any = {}
+                    updatedData[`columns/${columnIndex}/tasks`] = board.value?.columns[columnIndex].tasks
+
+                    return updateBoard(updatedData)
+                    .then(() => {console.log('successfully Removed')})
+                    .catch((e) => console.error(`The error is: ${e}`))
                 }
             }
         }
