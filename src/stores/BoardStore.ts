@@ -16,58 +16,59 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-const boardData: Ref<Board|null> = vueRef(null);
+const boardData: Ref<Board | null> = vueRef(null);
 
 const db = getDatabase();
 const boardRef = ref(db);
 onValue(boardRef, (snapshot => {
     let data = snapshot.val();
-    boardData.value = data
+    boardData.value = data || {columns: []}
 }))
 
 export const useBoardStore = defineStore('boardStore', () => {
 
     let board = boardData || null
 
-    function updateBoard(updatedInfo:Object) {
+
+    function updateBoard(updatedInfo:object) {
         return update(ref(db), updatedInfo)
     }
 
     async function addTask({taskName, columnIndex} : {taskName: string, columnIndex: number}){
-        if(!board.value?.columns[columnIndex].tasks) {
-            board.value.columns[columnIndex].tasks = [];
-        }
         const UUID = Math.random().toString(16).slice(2);
-        board.value?.columns[columnIndex].tasks.push({
-            name: taskName,
-            id: UUID,
-            description: ''
+        let tasks = board.value?.columns[columnIndex].tasks ?? [];
+
+        tasks.push({
+        name: taskName,
+        id: UUID,
+        description: ''
         })
+
         const updatedData:any = {}
-        updatedData[`columns/${columnIndex}/tasks`] = board.value?.columns[columnIndex].tasks;
+        updatedData[`columns/${columnIndex}/tasks`] = tasks;
 
         return await updateBoard(updatedData)
         .then(() => console.log('Succesfully Added'))
         .catch((e) => console.error(`The error is: ${e}`))
     }
 
-    function deleteTask({taskId, columnIndex} : {taskId: String, columnIndex: string}){
+    async function deleteTask({taskId, columnIndex} : {taskId: string, columnIndex: number}){
         if( board.value) {
-            for (const column of board?.value.columns) {
-                const taskIndex = column.tasks.findIndex(task => task.id === taskId)
-                if (taskIndex !== -1) {
-                    console.log(column);
-                    column.tasks.splice(taskIndex, 1);
-
-                    const updatedData:any = {}
-                    updatedData[`columns/${columnIndex}/tasks`] = board.value?.columns[columnIndex].tasks
-
-                    return updateBoard(updatedData)
-                    .then(() => {console.log('successfully Removed')})
-                    .catch((e) => console.error(`The error is: ${e}`))
-                }
+            let tasks = board.value.columns[columnIndex].tasks;
+            let taskFind = tasks.findIndex(item => item.id === taskId)
+            const updatedData:any= {}
+            if(taskFind !== -1) {
+                tasks.splice(taskFind, 1)
+                updatedData[`columns/${columnIndex}/tasks`] = tasks
+                return await updateBoard(updatedData)
+                .then(()=> console.log('Succesfully Deleted!'))
+                .catch(() => console.log('Could not be found'))
             }
-        }
+        }   
+    }
+
+    function updateValue({taskTitle, taskDescription, taskId, columnIndex} : {taskTitle: string, taskDescription: string, taskId: string, columnIndex: number}) {
+        console.log(taskTitle, taskDescription, taskId, columnIndex)
     }
 
     return {
@@ -75,6 +76,7 @@ export const useBoardStore = defineStore('boardStore', () => {
         board,
         // Actions
         addTask,
-        deleteTask
+        deleteTask,
+        updateValue
     }
 })

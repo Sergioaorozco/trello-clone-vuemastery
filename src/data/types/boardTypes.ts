@@ -9,7 +9,7 @@ interface Column {
 }
 
 interface Task {
-    name: string,
-    id: string,
-    description?: string
+    name: string | null,
+    id: string | null,
+    description: string | null
 }
