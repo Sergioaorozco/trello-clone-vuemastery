@@ -4,12 +4,12 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, onValue, ref, update } from "firebase/database";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDfOWhsyYBTYqj0dkqlkQnUYc_ImfnMwmY",
-    authDomain: "trellvue.firebaseapp.com",
+    apiKey: import.meta.env.VITE_API_KEY,
+    authDomain: import.meta.env.VITE_AUTH_DOMAIN,
     projectId: "trellvue",
     storageBucket: "trellvue.appspot.com",
     messagingSenderId: "539740201723",
-    appId: "1:539740201723:web:f79ae1b28271dc0488065e",
+    appId: import.meta.env.VITE_APP_ID,
     measurementId: "G-XF95R53X33"
 };
 

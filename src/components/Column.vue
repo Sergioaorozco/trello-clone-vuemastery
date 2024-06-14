@@ -28,7 +28,7 @@ const boardStore = useBoardStore();
 let isInputVisible = ref(false);
 let newTaskName = ref('');
 let newTaskValidation = ref({
-  class: 'bg-blue-100 border-blue-400 ring-blue-500 text-blue-800 placeholder-blue-800',
+  class: 'bg-blue-100 border-blue-400 ring-blue-500 text-slate-800 placeholder-blue-800',
   text: 'Name this Task'
 })
 
@@ -51,15 +51,17 @@ const props = defineProps({
 
 // Functions
 function addTask() {
-  try {
-    boardStore.addTask({
-      taskName: newTaskName.value,
-      columnIndex: Number(props.columnInd)
-    })
-  } catch(error) {
-    console.error('There was an error')
-  } finally {
-    newTaskName.value='';
+  if (newTaskName.value !== '') {
+    try {
+      boardStore.addTask({
+        taskName: newTaskName.value,
+        columnIndex: Number(props.columnInd)
+      })
+    } catch(error) {
+      console.error('There was an error')
+    } finally {
+      newTaskName.value='';
+    }
   }
 }
 
