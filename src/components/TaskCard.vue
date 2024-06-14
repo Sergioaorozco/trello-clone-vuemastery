@@ -10,7 +10,7 @@
         <template #header>
           <div class="w-full">
               <input required v-if="isEditingTask" @change="updateValue" @blur="isEditingTask = false" :value="taskInfo.name" type="text" class="w-full border-2 border-slate-500 rounded-md h-8 focus:bg-slate-100">
-              <h3 v-else @click="isEditingTask = true">{{taskInfo.name}}</h3>
+              <h3 v-else @click="isEditingTask = true" class="truncate">{{taskInfo.name}}</h3>
           </div>
         </template>
       </Dialog>
