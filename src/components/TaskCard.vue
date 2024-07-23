@@ -1,5 +1,5 @@
 <template>
-      <li class="flex justify-between bg-slate-300 rounded-md py-3 px-4 cursor-grab group hover:ring-1 ring-slate-600" draggable="true">
+      <li class="flex justify-between bg-slate-300 rounded-md py-3 px-4 cursor-grab group hover:ring-1 ring-slate-600">
         <p class="truncate">{{ taskInfo.name }}</p>
         <div class="flex gap-x-2 taskInfos-center">
           <i @click="editModal" class="hidden group-hover:block cursor-pointer text-slate-600 hover:text-slate-700 size-5 transition-colors duration-200"><editIcon /></i>
